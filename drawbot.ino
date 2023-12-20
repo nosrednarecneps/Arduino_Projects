@@ -28,17 +28,31 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  rotateMotorByAngle(1, 180);
+  rotateMotorByAngle(3, 500);
   delay(500);
+  rotateMotorByAngle(2, 180);
+  delay(500);
+  rotateMotorByAngle(3, 500);
+  delay(500);
+  rotateMotorByAngle(2, 180);
+  delay(500);
+  rotateMotorByAngle(3, 500);
+  delay(500);
+  rotateMotorByAngle(2, 180);
+  delay(500);
+  rotateMotorByAngle(3, 500);
+  delay(500);
+  rotateMotorByAngle(2, 180);
+  delay(3000);
 }
 
 void changeMotorPositionOne(bool dir) {
-  if (dir == true) {
+  if (dir == false) {
     step_number_1++;
     if (step_number_1 > 3) {
       step_number_1 = 0;
     }
-  } else if (dir == false) {
+  } else if (dir == true) {
     step_number_1--;
     if (step_number_1 < 0) {
       step_number_1 = 3;
@@ -54,7 +68,7 @@ void changeMotorPositionTwo(bool dir) {
     }
   } else if (dir == false) {
     step_number_2--;
-    if (step_number_2 < 0) {
+    if (step_number_2 < 0 ) {
       step_number_2 = 3;
     }
   }
