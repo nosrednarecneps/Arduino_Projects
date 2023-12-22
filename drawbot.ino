@@ -1,3 +1,5 @@
+#include <Stepper.h>
+
 #define SP1 9
 #define SP2 10
 #define SP3 11
@@ -9,6 +11,9 @@
 #define SP8 7
 
 #define STEPS_PER_REVOLUTION 2048
+
+Stepper lStepper(STEPS_PER_REVOLUTION, SP1, SP2, SP3, SP4);
+Stepper rStepper(STEPS_PER_REVOLUTION, SP5, SP6, SP7, SP8);
 
 int step_number_1 = 0;
 int step_number_2 = 0;
@@ -27,23 +32,7 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  rotateMotorByAngle(3, 500);
-  delay(500);
-  rotateMotorByAngle(2, 180);
-  delay(500);
-  rotateMotorByAngle(3, 500);
-  delay(500);
-  rotateMotorByAngle(2, 180);
-  delay(500);
-  rotateMotorByAngle(3, 500);
-  delay(500);
-  rotateMotorByAngle(2, 180);
-  delay(500);
-  rotateMotorByAngle(3, 500);
-  delay(500);
-  rotateMotorByAngle(2, 180);
-  delay(3000);
+  drawShape(2, 500, 500);
 }
 
 void changeMotorPositionOne(bool dir) {
@@ -74,13 +63,20 @@ void changeMotorPositionTwo(bool dir) {
   }
 }
 
-void rotateMotorByAngle(int motorGroup, int angle) {
+void rotateMotors(int motorGroup, int angle, int Delay, int lSpeed, int rSpeed) {
   int steps;
   steps = map(angle, 0, 360, 0, STEPS_PER_REVOLUTION);
+  if (lSpeed > 0) {
+    lStepper.setSpeed(lSpeed);
+  }
+  if (rSpeed > 0) {
+    rStepper.setSpeed(rSpeed);
+  }
   for (int i = 0; i < steps; i++) {
-    moveForward(motorGroup);
-    delay(2); // Adjust the delay as needed
+    moveBot(motorGroup);
+    delay(2);
   } 
+  delay(Delay);
 }
 
 void moveLeftMotor(bool dir) {
@@ -139,21 +135,59 @@ void moveRightMotor(bool dir) {
   }
 }
 
-void moveForward(int motorGroup) {
-  if (motorGroup == 1) {
-    //right
-    moveLeftMotor(false);
-    moveRightMotor(true);
-    //forward
-  } else if (motorGroup == 3) {
-    moveLeftMotor(true);
-    moveRightMotor(true);
-  } else if (motorGroup == 2) {
-    //left
-    moveLeftMotor(true);
-    moveRightMotor(false);
-  } else if (motorGroup == 4) {
-    moveLeftMotor(false);
-    moveRightMotor(false);
+void moveBot(int motorGroup) {
+  switch (motorGroup) {
+    case 1:
+      //right
+      moveLeftMotor(false);
+      moveRightMotor(true);   
+    case 2:  
+      //left
+      moveLeftMotor(true);
+      moveRightMotor(false);
+    case 3:
+      //forward
+      moveLeftMotor(true);
+      moveRightMotor(true);
+    case 4:
+      //backwards
+      moveLeftMotor(false);
+      moveRightMotor(false);
+  }
+}
+
+void drawShape(int shape, int cDelay, int sDelay) {
+  int m = 100;
+  switch (shape) {
+    case 0:
+      //draw square
+      delay(sDelay);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(2, 180, cDelay, m, m);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(2, 180, cDelay, m, m);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(2, 180, cDelay, m, m);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(2, 180, cDelay, m, m);
+    case 1:
+      //draw triangle
+      delay(sDelay);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(2, 180, cDelay, m, m);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(2, 270, cDelay, m, m);
+      rotateMotors(3, 353, cDelay, m, m);
+      rotateMotors(2, 270, cDelay, m, m);
+    case 2:
+      rotateMotors(3, 250, cDelay, 25, 25);
+      rotateMotors(3, 250, cDelay, 50, 50);
+      rotateMotors(3, 250, cDelay, m, m);
+      rotateMotors(4, 250, cDelay, 25, 25);
+      rotateMotors(4, 250, cDelay, 50, 50);
+      rotateMotors(4, 250, cDelay, m, m);
+      rotateMotors(2, 250, cDelay, 25, 25);
+      rotateMotors(2, 250, cDelay, 50, 50);
+      rotateMotors(2, 250, cDelay, m, m);
   }
 }
